@@ -1,54 +1,109 @@
-# Multilingual Speech Recognition — Whisper Fine-Tuning
+# 🎙️ Multilingual Speech Recognition — Whisper Fine-Tuning
 
-A Kaggle competition notebook that fine-tunes OpenAI's **Whisper Small** model on a multilingual speech recognition dataset and generates submission predictions.
+Fine-tuning OpenAI's **Whisper Small** model for multilingual speech recognition using the Hugging Face ecosystem. Built for the [Kaggle Multilingual Speech Recognition Competition](https://www.kaggle.com/competitions/multilingual-speech-recognition).
 
-## Overview
+---
 
-The notebook loads audio clips and their reference transcripts, fine-tunes Whisper using Hugging Face's `Seq2SeqTrainer`, evaluates performance with **Word Error Rate (WER)**, and produces a `submission.csv` for the competition.
+## 📌 Project Overview
 
-## Requirements
+This project fine-tunes the `openai/whisper-small` model on labeled multilingual audio data and generates transcript predictions for unseen test clips. Model performance is tracked using **Word Error Rate (WER)**.
+
+---
+
+## 🗂️ Repository Structure
+
+```
+📦 project-root
+ ┣ 📓 23ds3000081_DLP_26T1_NPPE2.ipynb   # Main training notebook
+ ┗ 📄 README.md
+```
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Clone the repository
 
 ```bash
-pip install jiwer
+git clone https://github.com/<your-username>/<repo-name>.git
+cd <repo-name>
 ```
 
-Core dependencies (pre-installed on Kaggle):
+### 2. Install dependencies
 
-- `torch`, `librosa`, `datasets`, `transformers`
-- `scikit-learn`, `pandas`, `numpy`, `jiwer`
-
-## Dataset
-
-Expected under `/kaggle/input/competitions/multilingual-speech-recognition/`:
-
-```
-train.csv                     # audio filename + transcript
-test.csv                      # audio filename
-sample_submission.csv
-competition_data/train/       # training audio clips
-competition_data/test/        # test audio clips
+```bash
+pip install torch librosa datasets transformers scikit-learn jiwer
 ```
 
-## Pipeline
+> **Note:** If running on Kaggle, most dependencies are pre-installed. Only `jiwer` needs to be added manually.
 
-1. **Load & normalize** — reads CSVs, lowercases/strips transcripts, builds audio file paths.
-2. **Train/val split** — 90/10 split (random seed 42).
-3. **Feature extraction** — loads audio at 16 kHz with `librosa`, extracts log-Mel features via `WhisperProcessor`.
-4. **Fine-tuning** — runs `Seq2SeqTrainer` for 500 steps with `fp16`, batch size 4, LR `1e-5`, evaluating every 200 steps.
-5. **Inference** — generates transcripts for all test clips and saves `submission.csv`.
+### 3. Download the dataset
 
-## Training Configuration
+Download the competition data from Kaggle and place it as follows:
+
+```
+/kaggle/input/competitions/multilingual-speech-recognition/
+├── train.csv
+├── test.csv
+├── sample_submission.csv
+└── competition_data/
+    ├── train/    ← training audio clips
+    └── test/     ← test audio clips
+```
+
+---
+
+## 🚀 How It Works
+
+| Step | Description |
+|------|-------------|
+| **1. Load & Normalize** | Reads CSVs, builds audio paths, lowercases/strips transcripts |
+| **2. Train/Val Split** | 90/10 split with random seed 42 |
+| **3. Feature Extraction** | Loads audio at 16 kHz, extracts log-Mel features via `WhisperProcessor` |
+| **4. Fine-Tuning** | Trains with `Seq2SeqTrainer` using `fp16` for 500 steps |
+| **5. Evaluation** | Measures WER on the validation split after training |
+| **6. Inference** | Generates transcripts for all test clips |
+| **7. Submission** | Saves predictions to `submission.csv` |
+
+---
+
+## 🏋️ Training Configuration
 
 | Parameter | Value |
-|---|---|
-| Model | `openai/whisper-small` |
+|-----------|-------|
+| Base model | `openai/whisper-small` |
 | Max steps | 500 |
-| Batch size | 4 |
+| Batch size (train/eval) | 4 |
+| Gradient accumulation steps | 2 |
 | Learning rate | 1e-5 |
 | Warmup steps | 100 |
-| Evaluation metric | WER (lower is better) |
+| Evaluation frequency | Every 200 steps |
+| Mixed precision | fp16 ✅ |
+| Metric | WER ↓ (lower is better) |
 
-## Output
+---
 
-- `./whisper-small-ft/` — fine-tuned model checkpoints
-- `submission.csv` — predictions in competition format
+## 📊 Results
+
+| Split | WER |
+|-------|-----|
+| Validation | *(fill after training)* |
+
+---
+
+## 📤 Output Files
+
+- `./whisper-small-ft/` — saved model checkpoints
+- `submission.csv` — final predictions in competition format
+
+---
+
+## 🛠️ Tech Stack
+
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.x-orange?logo=pytorch)
+![HuggingFace](https://img.shields.io/badge/HuggingFace-Transformers-yellow?logo=huggingface)
+![Whisper](https://img.shields.io/badge/OpenAI-Whisper-green)
+![Kaggle](https://img.shields.io/badge/Platform-Kaggle-blue?logo=kaggle)
+
+---
