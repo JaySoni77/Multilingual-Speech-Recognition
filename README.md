@@ -81,16 +81,6 @@ Download the competition data from Kaggle and place it as follows:
 | Mixed precision | fp16 ✅ |
 | Metric | WER ↓ (lower is better) |
 
----
-
-## 📊 Results
-
-| Split | WER |
-|-------|-----|
-| Validation | *(fill after training)* |
-
----
-
 ## 📤 Output Files
 
 - `./whisper-small-ft/` — saved model checkpoints
